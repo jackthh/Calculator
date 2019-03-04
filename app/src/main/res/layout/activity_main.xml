@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tblLayout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:stretchColumns="*"
+    style="@style/Base.Widget.AppCompat.ButtonBar">
+
+    <TableRow
+        android:id="@+id/tblRow1"
+        >
+        <TextView
+            android:id="@+id/tvDisplay"
+            android:layout_height="300dp"
+            android:textSize="40sp"
+            android:layout_gravity="center_vertical"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRow2">
+        <Button
+            android:id="@+id/btnAC"
+            android:text="AC"/>
+        <Button
+            android:id="@+id/btnPercent"
+            android:text="%"/>
+        <Button
+            android:id="@+id/btnDel"
+            android:text="del"/>
+        <Button
+            android:id="@+id/btnDivide"
+            android:text="/"/>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRow3">
+        <Button
+            android:id="@+id/btnX"
+            android:text="x"/>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRow4">
+        <Button
+            android:id="@+id/btnSubtract"
+            android:text="-"/>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRow5">
+        <Button
+            android:id="@+id/btnAdd"
+            android:text="+"/>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tblRow6">
+        <Button
+            android:id="@+id/btn."
+            android:text="."/>
+        <Button
+            android:id="@+id/btnEqual"
+            android:layout_span="2"
+            android:text="="/>
+    </TableRow>
+
+</TableLayout>
