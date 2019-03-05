@@ -1,15 +1,12 @@
 package com.example.gemyni.calculatordemo;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.LinkedList;
 
@@ -19,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnAC, btnPercent, btnDel, btnDivide, btnX, btnSub, btnAdd, btnEqual;
     TableRow tblRow3, tblRow4, tblRow5, tblRow6;
     Button[] numberBtn;
-    LinkedList<String> ioString = new LinkedList();
+    IoString data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < 10; i++) {
             numberBtn[i] = new Button(this);
             numberBtn[i].setId(123123 + i);
-            numberBtn[i].setText(Integer.toString(i));
+            numberBtn[i].setText(Double.toString(i));
             numberBtn[i].setOnClickListener(this);
         }
         tblRow3.addView(numberBtn[7], 0);
@@ -82,129 +79,96 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        boolean isNum = false;
+//        boolean isNum = false;
 
         // Check whether button is number button or not
         for (int i = 0; i < 10; i++) {
             if (v.getId() == numberBtn[i].getId()) {
-                ioString.add(numberBtn[i].getText().toString());
-                isNum = true;
-                Toast.makeText(this,"Nut duoc an la" + i, Toast.LENGTH_SHORT).show();
+                data.Add(numberBtn[i].getText().toString());
+//                isNum = true;
             }
         }
 
         // Handle the operator button
+        // No idea, but commenting out the if statement runs everything
 //        if (isNum = false) {
-            switch (v.getId()) {
-                case R.id.btnAC:
-                    this.Clear();
-                    Toast.makeText(this,"Nut duoc an la clear" , Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnAdd:
-                    ioString.add("+");
-                    Toast.makeText(this,"Nut duoc an la cong" , Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnDel:
-                    this.Backspace();
-                    Toast.makeText(this,"Nut duoc an la bp" , Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnDivide:
-                    ioString.add("/");
-                    break;
-                case R.id.btnEqual:
-                    this.Compute();
-                    break;
-                case R.id.btnPercent:
-                    ioString.add("%");
-                    break;
-                case R.id.btnSubtract:
-                    ioString.add("-");
-                    break;
-                case R.id.btnX:
-                    ioString.add("*");
-                    break;
-            }
-            // Display on screen
-            String result = "";
-            for(int i = 0; i < ioString.size(); i++)
-            {
-                result += ioString.get(i);
-            }
-            tvDisplay.setText(result);
+        switch (v.getId()) {
+            case R.id.btnAC:
+                data.Clear();
+                break;
+            case R.id.btnAdd:
+                data.Add("+");
+                break;
+            case R.id.btnDel:
+                data.BackSpace();
+                break;
+            case R.id.btnDivide:
+                data.Add("/");
+                break;
+            case R.id.btnEqual:
+                this.Compute();
+                break;
+            case R.id.btnPercent:
+                data.Add("%");
+                break;
+            case R.id.btnSubtract:
+                data.Add("-");
+                break;
+            case R.id.btnX:
+                data.Add("*");
+                break;
+        }
+        // Display on screen
+        tvDisplay.setText(data.GetData());
 //        }
-
     }
 
     // Optional features
-    void Clear()
-    {
-        ioString.clear();
-    }
-
-    void Backspace()
-    {
-        ioString.removeLast();
-    }
-
-    void Compute()
-    {
-        Toast.makeText(this,"Da compute", Toast.LENGTH_LONG).show();
-
+    void Compute() {
         // Make 2 loops to maintain the computing order
-        for(int i = 0; i < ioString.size(); i++)
-        {
-            if (ioString.get(i).toString() == "*")
-            {
-                Toast.makeText(this,"Cos dau nhan", Toast.LENGTH_LONG).show();
+        for (int i = 0; i < data.GetDataSize(); i++) {
+            if (data.GetData(i) == "*") {
                 // Calculate the result of the multiplication
-                int result = Integer.parseInt(ioString.get(i - 1)) * Integer.parseInt(ioString.get(i + 1));
+                double result = data.GetPreviousNumber(i) * data.GetNextNumber(i);
                 // Put result into the center node
-                ioString.set(i, Integer.toString(result));
+                data.SetData(i, Double.toString(result));
                 // Remove beside nodes
-                ioString.remove(i + 1);
-                ioString.remove(i - 1);
+                data.RemoveBesideNumbers(i);
                 continue;
             }
             // The same as above blocks
-            if (ioString.get(i) == "/")
-            {
-                double result = Double.parseDouble(ioString.get(i - 1)) / Integer.parseInt(ioString.get(i + 1));
-                ioString.set(i, Double.toString(result));
-                ioString.remove(i + 1);
-                ioString.remove(i - 1);
+            if (data.GetData(i) == "/") {
+                // Calculate the result of the division
+                double result = data.GetPreviousNumber(i) / data.GetNextNumber(i);
+                // Put result into the center node
+                data.SetData(i, Double.toString(result));
+                // Remove beside nodes
+                data.RemoveBesideNumbers(i);
                 continue;
             }
         }
 
         // The same as above blocks
-        for(int i = 0; i < ioString.size(); i++)
-        {
-            if (ioString.get(i) == "+")
-            {
-                int result = Integer.parseInt(ioString.get(i - 1)) + Integer.parseInt(ioString.get(i + 1));
-                ioString.set(i, Integer.toString(result));
-                ioString.remove(i + 1);
-                ioString.remove(i - 1);
+        for (int i = 0; i < data.GetDataSize(); i++) {
+            if (data.GetData(i) == "+") {
+                // Calculate the result of the add
+                double result = data.GetPreviousNumber(i) + data.GetNextNumber(i);
+                // Put result into the center node
+                data.SetData(i, Double.toString(result));
+                // Remove beside nodes
+                data.RemoveBesideNumbers(i);
                 continue;
             }
-            if (ioString.get(i) == "-")
-            {
-                int result = Integer.parseInt(ioString.get(i - 1)) - Integer.parseInt(ioString.get(i + 1));
-                ioString.set(i, Integer.toString(result));
-                ioString.remove(i + 1);
-                ioString.remove(i - 1);
+            // The same as above blocks
+            if (data.GetData(i) == "-") {
+                // Calculate the result of the subtraction
+                double result = data.GetPreviousNumber(i) - data.GetNextNumber(i);
+                // Put result into the center node
+                data.SetData(i, Double.toString(result));
+                // Remove beside nodes
+                data.RemoveBesideNumbers(i);
                 continue;
             }
         }
-    }
-
-    void GetPreviousNumber()
-    {
-
-    }
-
-    void GetNextNumber()
-    {
-
     }
 }
