@@ -1,22 +1,25 @@
 package com.example.gemyni.calculatordemo;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvDisplay;
     TableLayout tbl;
-    Button btnAC, btnPercent, btnDel, btnDivide, btnX, btnSub, btnAdd;
+    Button btnAC, btnPercent, btnDel, btnDivide, btnX, btnSub, btnAdd, btnEqual;
     TableRow tblRow3, tblRow4, tblRow5, tblRow6;
     Button[] numberBtn;
-    LinkedList<String> ioString = new LinkedList<>();
+    LinkedList<String> ioString = new LinkedList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,25 +30,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tbl = findViewById(R.id.tblLayout);
 
         btnAC = findViewById(R.id.btnAC);
-//        btnAC.setOnClickListener(this);
+        btnAC.setOnClickListener(this);
 
         btnPercent = findViewById(R.id.btnPercent);
-//        btnPercent.setOnClickListener(this);
+        btnPercent.setOnClickListener(this);
+
+        btnEqual = findViewById(R.id.btnEqual);
+        btnEqual.setOnClickListener(this);
 
         btnDel = findViewById(R.id.btnDel);
-//        btnDel.setOnClickListener(this);
+        btnDel.setOnClickListener(this);
 
         btnDivide = findViewById(R.id.btnDivide);
-//        btnDivide.setOnClickListener(this);
+        btnDivide.setOnClickListener(this);
 
         btnX = findViewById(R.id.btnX);
-//        btnX.setOnClickListener(this);
+        btnX.setOnClickListener(this);
 
         btnSub = findViewById(R.id.btnSubtract);
-//        btnSub.setOnClickListener(this);
+        btnSub.setOnClickListener(this);
 
         btnAdd = findViewById(R.id.btnAdd);
-//        btnAdd.setOnClickListener(this);
+        btnAdd.setOnClickListener(this);
 
         tblRow3 = findViewById(R.id.tblRow3);
         tblRow4 = findViewById(R.id.tblRow4);
@@ -54,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         numberBtn = new Button[10];
         for (int i = 0; i < 10; i++) {
-            numberBtn[i].setId(Integer.parseInt("btn" + i));
-            numberBtn[i].setText(i);
-            /*numberBtn[i].setOnClickListener(this)*/;
+            numberBtn[i] = new Button(this);
+            numberBtn[i].setId(123123 + i);
+            numberBtn[i].setText(Integer.toString(i));
+            numberBtn[i].setOnClickListener(this);
         }
         tblRow3.addView(numberBtn[7], 0);
         tblRow3.addView(numberBtn[8], 1);
@@ -82,26 +89,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (v.getId() == numberBtn[i].getId()) {
                 ioString.add(numberBtn[i].getText().toString());
                 isNum = true;
+                Toast.makeText(this,"Nut duoc an la" + i, Toast.LENGTH_SHORT).show();
             }
         }
 
         // Handle the operator button
-        if (isNum = false) {
+//        if (isNum = false) {
             switch (v.getId()) {
                 case R.id.btnAC:
                     this.Clear();
+                    Toast.makeText(this,"Nut duoc an la clear" , Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnAdd:
                     ioString.add("+");
+                    Toast.makeText(this,"Nut duoc an la cong" , Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnDel:
                     this.Backspace();
+                    Toast.makeText(this,"Nut duoc an la bp" , Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnDivide:
                     ioString.add("/");
                     break;
                 case R.id.btnEqual:
                     this.Compute();
+                    break;
                 case R.id.btnPercent:
                     ioString.add("%");
                     break;
@@ -113,8 +125,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
             }
             // Display on screen
-            tvDisplay.setText(ioString.toString());
-        }
+            String result = "";
+            for(int i = 0; i < ioString.size(); i++)
+            {
+                result += ioString.get(i);
+            }
+            tvDisplay.setText(result);
+//        }
 
     }
 
@@ -131,26 +148,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     void Compute()
     {
+        Toast.makeText(this,"Da compute", Toast.LENGTH_LONG).show();
+
         // Make 2 loops to maintain the computing order
         for(int i = 0; i < ioString.size(); i++)
         {
-            if (ioString.get(i) == "*")
+            if (ioString.get(i).toString() == "*")
             {
+                Toast.makeText(this,"Cos dau nhan", Toast.LENGTH_LONG).show();
                 // Calculate the result of the multiplication
                 int result = Integer.parseInt(ioString.get(i - 1)) * Integer.parseInt(ioString.get(i + 1));
                 // Put result into the center node
                 ioString.set(i, Integer.toString(result));
                 // Remove beside nodes
-                ioString.remove(ioString.get(i - 1));
-                ioString.remove(ioString.get(i + 1));
+                ioString.remove(i + 1);
+                ioString.remove(i - 1);
+                continue;
             }
             // The same as above blocks
             if (ioString.get(i) == "/")
             {
-                int result = Integer.parseInt(ioString.get(i - 1)) / Integer.parseInt(ioString.get(i + 1));
-                ioString.set(i, Integer.toString(result));
-                ioString.remove(ioString.get(i - 1));
-                ioString.remove(ioString.get(i + 1));
+                double result = Double.parseDouble(ioString.get(i - 1)) / Integer.parseInt(ioString.get(i + 1));
+                ioString.set(i, Double.toString(result));
+                ioString.remove(i + 1);
+                ioString.remove(i - 1);
+                continue;
             }
         }
 
@@ -161,16 +183,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 int result = Integer.parseInt(ioString.get(i - 1)) + Integer.parseInt(ioString.get(i + 1));
                 ioString.set(i, Integer.toString(result));
-                ioString.remove(ioString.get(i - 1));
-                ioString.remove(ioString.get(i + 1));
+                ioString.remove(i + 1);
+                ioString.remove(i - 1);
+                continue;
             }
             if (ioString.get(i) == "-")
             {
                 int result = Integer.parseInt(ioString.get(i - 1)) - Integer.parseInt(ioString.get(i + 1));
                 ioString.set(i, Integer.toString(result));
-                ioString.remove(ioString.get(i - 1));
-                ioString.remove(ioString.get(i + 1));
+                ioString.remove(i + 1);
+                ioString.remove(i - 1);
+                continue;
             }
         }
+    }
+
+    void GetPreviousNumber()
+    {
+
+    }
+
+    void GetNextNumber()
+    {
+
     }
 }
