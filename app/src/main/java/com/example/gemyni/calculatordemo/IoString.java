@@ -31,16 +31,19 @@ public class IoString {
         return this.dataString.size();
     }
 
+    // index in this case == position of operator
+    // i in this case == moving pointer to find out the (size of) previous number
     double GetPreviousNumber(int index) {
         int i = index - 1;
         String previousNumber = "";
         // scan for the previous number
         while (i >= 0) {
-            if (this.dataString.get(i) != "*" && this.dataString.get(i) != "/" && this.dataString.get(i) != "+"
-                    && this.dataString.get(i) != "-") {
+            if (this.dataString.get(i) != "*" && this.dataString.get(i) != "/"
+                    && this.dataString.get(i) != "+" && this.dataString.get(i) != "-") {
                 previousNumber = this.dataString.get(i) + previousNumber;
                 if (i == 0) {
                     this.previousNumSize = index - i;
+                    break;
                 }
             } else {
                 // calculate size of number
@@ -53,6 +56,8 @@ public class IoString {
         return Double.parseDouble(previousNumber);
     }
 
+    // index in this case == position of operator
+    // i in this case == moving pointer to find out the (size of) next number
     double GetNextNumber(int index) {
         int i = index + 1;
         String nextNumber = "";
@@ -63,6 +68,7 @@ public class IoString {
                 nextNumber += this.dataString.get(i);
                 if (this.dataString.size() - i == 1) {
                     this.nextNumSize = i - index;
+                    break;
                 }
             } else {
                 // calculate size of number
@@ -88,7 +94,7 @@ public class IoString {
             this.dataString.remove(index + i);
         }
         for (int i = 0; i < this.previousNumSize; i++) {
-            this.dataString.remove(index - 1);
+            this.dataString.remove(index - i - 1);
         }
         this.nextNumSize = 0;
         this.previousNumSize = 0;
