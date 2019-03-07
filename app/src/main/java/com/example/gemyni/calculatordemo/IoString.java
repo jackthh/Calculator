@@ -31,6 +31,13 @@ public class IoString {
         return this.dataString.size();
     }
 
+    void RemovePreviousNumber(int index) {
+        for (int i = 0; i < this.previousNumSize; i++) {
+            this.dataString.remove(index - i - 1);
+        }
+    }
+
+
     // index in this case == position of operator
     // i in this case == moving pointer to find out the (size of) previous number
     double GetPreviousNumber(int index) {

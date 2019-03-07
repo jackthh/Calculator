@@ -132,6 +132,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Optional features
     void Compute() {
+
+        // Percentage
+        for (int i = 0; i < data.GetDataSize(); i++) {
+            if (data.GetData(i) == "%") {
+                Double cache = data.GetPreviousNumber(i) / 100;
+                data.SetData(i, Double.toString(cache));
+                data.RemovePreviousNumber(i);
+            }
+        }
+
         // Make 2 loops to maintain the computing order
         for (int i = 0; i < data.GetDataSize(); i++) {
             if (data.GetData(i) == "*") {
