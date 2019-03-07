@@ -6,19 +6,19 @@ public class IoString {
     private LinkedList<String> dataString = new LinkedList<>();
     private int previousNumSize, nextNumSize;
 
-    void Add (String str) {
-        this.dataString.addLast(str);
+    void Add(String str) {
+        this.dataString.add(str);
     }
 
-    void SetData (int index, String str) {
+    void SetData(int index, String str) {
         this.dataString.set(index, str);
     }
 
     String GetData() {
         // shouldn't use this.dataString.toString() cause it surrounds result by "[" and "]"
         String data = "";
-        for (int i = 0; i <= this.dataString.size(); i++) {
-            data += this.dataString.get(i).toString();
+        for (int i = 0; i < this.dataString.size(); i++) {
+            data += this.dataString.get(i);
         }
         return data;
     }
@@ -39,6 +39,9 @@ public class IoString {
             if (this.dataString.get(i) != "*" && this.dataString.get(i) != "/" && this.dataString.get(i) != "+"
                     && this.dataString.get(i) != "-") {
                 previousNumber = this.dataString.get(i) + previousNumber;
+                if (i == 0) {
+                    this.previousNumSize = index - i;
+                }
             } else {
                 // calculate size of number
                 this.previousNumSize = index - i - 1;
@@ -54,10 +57,13 @@ public class IoString {
         int i = index + 1;
         String nextNumber = "";
         // scan for the previous number
-        while (i <= this.dataString.size()) {
+        while (i < this.dataString.size()) {
             if (this.dataString.get(i) != "*" && this.dataString.get(i) != "/" && this.dataString.get(i) != "+"
                     && this.dataString.get(i) != "-") {
                 nextNumber += this.dataString.get(i);
+                if (this.dataString.size() - i == 1) {
+                    this.nextNumSize = i - index;
+                }
             } else {
                 // calculate size of number
                 this.nextNumSize = i - index - 1;
@@ -69,19 +75,17 @@ public class IoString {
         return Double.parseDouble(nextNumber);
     }
 
-    void Clear()
-    {
+    void Clear() {
         this.dataString.clear();
     }
 
-    void BackSpace()
-    {
+    void BackSpace() {
         this.dataString.removeLast();
     }
 
     void RemoveBesideNumbers(int index) {
-        for (int i = this.nextNumSize; i >= 1; i --) {
-            this.dataString.remove(index +i);
+        for (int i = this.nextNumSize; i >= 1; i--) {
+            this.dataString.remove(index + i);
         }
         for (int i = 0; i < this.previousNumSize; i++) {
             this.dataString.remove(index - 1);

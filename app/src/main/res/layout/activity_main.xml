@@ -15,6 +15,7 @@
         <TextView
             android:id="@+id/tvDisplay"
             android:layout_width="match_parent"
+            android:layout_span="4"
             android:layout_height="300dp"
             android:layout_gravity="center_vertical"
             android:textSize="40sp" />
@@ -64,7 +65,7 @@
     <TableRow
         android:id="@+id/tblRow6">
         <Button
-            android:id="@+id/btn."
+            android:id="@+id/btnPoint"
             android:text="."/>
         <Button
             android:id="@+id/btnEqual"

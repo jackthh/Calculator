@@ -7,16 +7,17 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvDisplay;
     TableLayout tbl;
-    Button btnAC, btnPercent, btnDel, btnDivide, btnX, btnSub, btnAdd, btnEqual;
+    Button btnAC, btnPercent, btnPoint, btnDel, btnDivide, btnX, btnSub, btnAdd, btnEqual;
     TableRow tblRow3, tblRow4, tblRow5, tblRow6;
     Button[] numberBtn;
-    IoString data;
+    IoString data = new IoString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnPercent = findViewById(R.id.btnPercent);
         btnPercent.setOnClickListener(this);
+
+        btnPoint = findViewById(R.id.btnPoint);
+        btnPoint.setOnClickListener(this);
 
         btnEqual = findViewById(R.id.btnEqual);
         btnEqual.setOnClickListener(this);
@@ -58,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         numberBtn = new Button[10];
         for (int i = 0; i < 10; i++) {
             numberBtn[i] = new Button(this);
-            numberBtn[i].setId(123123 + i);
-            numberBtn[i].setText(Double.toString(i));
+            numberBtn[i].setId(321321 + i);
+            numberBtn[i].setText(Integer.toString(i));
             numberBtn[i].setOnClickListener(this);
         }
         tblRow3.addView(numberBtn[7], 0);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Check whether button is number button or not
         for (int i = 0; i < 10; i++) {
             if (v.getId() == numberBtn[i].getId()) {
-                data.Add(numberBtn[i].getText().toString());
+                data.Add((numberBtn[i].getText()).toString());
 //                isNum = true;
             }
         }
@@ -110,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnPercent:
                 data.Add("%");
+                break;
+            case R.id.btnPoint:
+                data.Add(".");
                 break;
             case R.id.btnSubtract:
                 data.Add("-");
@@ -171,4 +178,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
 }
